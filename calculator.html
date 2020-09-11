@@ -1,0 +1,380 @@
+﻿<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/1c2c2462bf.js" crossorigin="anonymous"></script>
+    <title>Calculator With Dark and Light Mode</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+    margin:0;
+    padding:0;
+    font-family: 'Poppins', sans-serif;
+}
+html {
+    --bg: #f5f6f7;
+    --color-text: #9c9c9c;
+    --color-orange: #ff6a00;
+    --color-shadow: -4px -2px 4px 0px #ffffff, 
+                    4px 2px 6px 0px #DFE4EA;
+
+    --color-inset-shadow: inset -2px -2px 6px rgba(255,255,255,0.8),
+                        inset 2px 2px 6px rgba(0,0,0,0.1); 
+
+    --color-equal-shadow: -2px -2px 6px rgb(3, 169, 244, 0.01),
+                        2px 2px 6px rgba(0,0,0,0.3);
+
+    --color-equal-inset-shadow: inset -2px -2px 6px rgba(255, 106, 0,0.5),
+                            inset 2px 2px 6px rgba(0,0,0,0.3); 
+}
+
+html[data-theme='dark'] {
+    --bg: #131419;
+    --color-text: #fff;
+    --color-orange: #ff6a00;
+    --color-shadow: -3px -3px 10px rgba(255,255,255,0.05), 
+                    3px 3px 15px rgba(0,0,0,0.5);
+
+    --color-inset-shadow: inset -2px -2px 6px rgba(255,255,255,0.01),
+                        inset 2px 2px 6px rgba(0,0,0,0.8);
+
+    --color-equal-shadow: -2px -2px 6px rgb(3, 169, 244, 0.01),
+                            2px 2px 6px rgba(0,0,0,0.8);
+
+    --color-equal-inset-shadow: inset -2px -2px 6px rgba(255, 106, 0,0.2),
+                                inset 2px 2px 6px rgba(0,0,0,0.5); 
+}
+
+
+button{
+    outline: none;
+}
+body {
+    background-color: var(--bg);
+}
+.main{
+    width: 300px;
+    height: 560px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 10px; 
+    background-color: var(--bg);
+    box-shadow: var(--color-shadow);  
+    overflow: hidden;
+}
+
+.heading{
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    padding: 0 1.75rem;
+}
+.heading span{
+    color: var(--color-text);
+    font-size: 1.125rem;
+}
+.heading span:nth-child(1),
+.heading span:nth-child(3){
+    cursor: pointer;
+    font-size: 0.9375rem;
+}
+.heading span:nth-child(2){
+    margin-top: 5px;
+}
+.heading span:nth-child(2)::after{
+    width: 115px;
+    content: '';
+    position: absolute;
+    bottom: -5%;
+    border-bottom: 3px solid var(--color-orange);
+    z-index: 100;
+    left: 30%;
+    border-radius: 0.625rem;
+}
+#result{
+    height: 30%;
+    position: relative;
+    background-color: var(--bg);
+    border-top: 3px solid rgba(0,0,0,0.05);
+    border-bottom: 3px solid rgba(0,0,0,0.05);
+}
+#history-value{
+    position: absolute;
+    text-align: right;
+    bottom:30%;
+    right: 5%;
+    font-size: 2rem;
+    color: var(--color-text);
+}
+#output-value{
+    position: absolute;
+    text-align: right;
+    bottom:2%;
+    right: 5%;
+    font-size: 2rem;
+    color: var(--color-text);  
+}
+#keyboard{
+    padding: 1.875rem 1.25rem;
+}
+.operator,
+.number{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--bg);
+    font-weight: 900;
+    font-size: 1.125rem;   
+    cursor: pointer; 
+    box-shadow: var(--color-shadow);
+}
+.group{
+    width: 185px;
+    float: left;
+}
+.top-section{
+    height: auto;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    padding:0.25rem 0.375rem;
+    border-radius: 1.875rem;
+    justify-content: space-between;
+    margin-left: 0.625rem;
+    background: var(--bg);
+    box-shadow: var(--color-shadow);
+}
+.top-section button{
+    margin-top: 0.125rem;
+}
+.middle-section{
+    height: auto;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.25rem;
+    border-radius: 1.875rem; 
+    margin-top: 0.125rem;
+    margin-left: 0.20rem;
+}
+.middle-section button{
+    margin: 0.1875rem 0.3125rem;
+    color: var(--color-text);
+    font-weight: 600;
+}
+.side-section{
+    float: left;
+    height: 254px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding:0.3125rem  0.25rem;
+    border-radius: 1.875rem;
+    justify-content: space-between;
+    margin-left: 0.625rem;
+    background: var(--bg);
+    box-shadow: var(--color-shadow);
+}
+.side-section button{
+    margin-left: 0.125rem;
+}
+.equal{
+    background-color: var(--color-orange);
+    color: #fff !important;
+    box-shadow: var(--color-equal-shadow);
+}
+.operator{
+    color: var(--color-orange);
+}
+
+.operator:active, 
+.number:active,
+.operator:hover, 
+.number:hover{
+    box-shadow: var(--color-inset-shadow); 
+}
+.equal:active,
+.equal:hover{
+    background: var(--color-orange);
+    box-shadow: var(--color-equal-inset-shadow);
+}
+
+.fas{
+    cursor: pointer;
+}
+label input[type="checkbox"]{
+    -webkit-appearance: none;
+}
+label input[type="checkbox"]:checked ~ .fas{
+    color: var(--color-orange);
+}
+
+</style>
+</head>
+<body>
+    <div class="main">
+        <div class="heading">
+            <span><i class="fas fa-bars"></i></span>
+            <span>Calculator</span>
+            <span>
+                <label>
+                    <input type="checkbox" name="theme">
+                    <span class="btn"></span>
+                    <i class="fas fa-moon"></i>
+                </label>
+            </span>
+        </div>
+        <div id="result">
+            <div class="history">
+                <p id="history-value"></p>
+            </div>
+            <div class="output">
+                <p id="output-value"></p>
+            </div>
+        </div>
+        <div id="keyboard">
+            <div class="group">
+                <div class="top-section">
+                    <button class="operator" id="clear">C</button>
+                    <button class="operator" id="backspace">
+                        <i class="fas fa-backspace"></i>
+                    </button>
+                    <button class="operator" id="%">%</button>
+                </div>
+                <div class="middle-section">
+                    <div>
+                        <button class="number" id="7">7</button>
+                        <button class="number" id="8">8</button>
+                        <button class="number" id="9">9</button>
+                    </div>
+                    <div>
+                        <button class="number" id="4">4</button>
+                        <button class="number" id="5">5</button>
+                        <button class="number" id="6">6</button>
+                    </div>
+                    <div>
+                        <button class="number" id="1">1</button>
+                        <button class="number" id="2">2</button>
+                        <button class="number" id="3">3</button>
+                    </div>
+                    <div>
+                        <button class="number" id="00">00</button></td>
+                        <button class="number" id="0">0</button></td>
+                        <button class="number" id=".">.</button></td>
+                    </div>   
+                </div>
+            </div>
+            <div class="side-section">
+                <button class="operator" id="/">/</button>  
+                <button class="operator" id="*">&times</button>  
+                <button class="operator" id="-">-</button> 
+                <button class="operator" id="+">+</button> 
+                <button class="operator equal" id="=">=</button></td>
+            </div>
+        </div>
+    </div>
+     <script>function getHistory(){
+    return document.getElementById('history-value').innerText;
+}
+function printHistory(num){
+    document.getElementById("history-value").innerText=num;
+}
+function getOutput(){
+    return document.getElementById("output-value").innerText;
+}
+function printOutput(num){
+    if(num==""){
+        document.getElementById("output-value").innerText=num;
+    }else{
+        document.getElementById("output-value").innerText=getFormattedNumber(num);
+    } 
+}
+function getFormattedNumber(num){
+    if(num=="-"){
+        return "";
+    }
+    var n = Number(num);
+    var value = n.toLocaleString("en");
+    return value;
+}
+function reverseNumberFormat(num){
+    return Number(num.replace(/,/g,''));
+}
+
+var operator = document.getElementsByClassName("operator");
+for(var i=0;i<operator.length;i++){
+    operator[i].addEventListener('click',function(){
+        if(this.id=="clear"){
+            printHistory("");
+            printOutput("");
+        }
+        else if(this.id=="backspace"){
+            var output = reverseNumberFormat(getOutput()).toString();
+            if(output){
+                output = output.substr(0,output.length-1);
+                printOutput(output);
+            }
+        }
+        else{
+            var output = getOutput();
+            var history = getHistory();
+            if(output=="" && history!=""){
+
+                if(isNaN(history[history.length-1])){
+                    history = history.substr(0,history.length-1);
+                }
+            }
+            if(output!="" || history!=""){
+                output = output=="" ? output : reverseNumberFormat(output);
+                history = history+output;
+                if(this.id=="="){
+                    var result=eval(history);
+                    printOutput(result);
+                    printHistory("");
+                }
+
+                else if(this.id=="%"){
+                    var n = reverseNumberFormat(getOutput());
+                    var percent = n / 100;
+                    printOutput(percent.toFixed(4));
+                }
+                else{
+                    history=history+this.id;
+                    printHistory(history);
+                    printOutput("");
+                }
+            }
+        }
+    });
+}
+
+var number = document.getElementsByClassName("number");
+for(var i=0;i<number.length;i++){
+    number[i].addEventListener('click',function(){
+        var output=reverseNumberFormat(getOutput());
+        //if output is a number
+        if(output!=NaN){
+            output=output+this.id;
+            printOutput(output);
+            
+        }
+    });
+}
+
+let checkbox = document.querySelector('input[name=theme]');
+checkbox.addEventListener('change',function(){
+    if(this.checked){
+        document.documentElement.setAttribute('data-theme','dark');
+    }else{
+        document.documentElement.setAttribute('data-theme','light');
+    }
+})</script>
+</body>
+</html>
